@@ -53,7 +53,7 @@ export function TrashView({
         onViewChange={onViewChange}
         trailing={
           trashed.length > 0 && (
-            <Button variant="outline" size="sm" onClick={onRequestEmptyTrash}>
+            <Button variant="outline" onClick={onRequestEmptyTrash}>
               Empty trash
             </Button>
           )

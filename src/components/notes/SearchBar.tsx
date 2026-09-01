@@ -9,7 +9,7 @@ interface SearchBarProps {
 
 export function SearchBar({ value, onChange, className }: SearchBarProps) {
   return (
-    <div className={cn('relative w-full max-w-sm', className)}>
+    <div className={cn('relative w-full', className)}>
       <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-faint" />
       <input
         type="search"
