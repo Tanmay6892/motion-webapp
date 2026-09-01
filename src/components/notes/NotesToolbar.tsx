@@ -38,7 +38,7 @@ export function NotesToolbar({
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <SearchBar value={search} onChange={onSearchChange} className="min-w-[180px] flex-1" />
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <SortMenu value={sortMode} onChange={onSortChange} />
           <ViewToggle value={viewMode} onChange={onViewChange} />
           {trailing}
