@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { NoteEditorBody } from '@/components/notes/NoteEditorBody'
 import { isEditorEmpty } from '@/lib/richtext'
 import { cn } from '@/lib/utils'
@@ -19,15 +20,21 @@ export function NoteComposer({ onCreate }: NoteComposerProps) {
   const isEmpty =
     !draft.title.trim() && isEditorEmpty(draft.content) && !draft.image
 
-  const collapseAndSave = React.useCallback(() => {
+  const reset = React.useCallback(() => {
     setExpanded(false)
-    if (!isEmpty) {
-      onCreate(draft)
-    }
     setDraft(EMPTY_DRAFT)
     setEditorKey((k) => k + 1)
+  }, [])
+
+  const handleSave = React.useCallback(() => {
+    if (!isEmpty) onCreate(draft)
+    reset()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draft, isEmpty, onCreate])
+  }, [draft, isEmpty, onCreate, reset])
+
+  const handleCancel = React.useCallback(() => {
+    reset()
+  }, [reset])
 
   React.useEffect(() => {
     if (!expanded) return
@@ -36,10 +43,10 @@ export function NoteComposer({ onCreate }: NoteComposerProps) {
       if (containerRef.current?.contains(target)) return
       if (target.closest('[data-radix-popper-content-wrapper]')) return
       if (target.closest('[role="dialog"]')) return
-      collapseAndSave()
+      handleSave()
     }
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') collapseAndSave()
+      if (e.key === 'Escape') handleCancel()
     }
     document.addEventListener('mousedown', handlePointerDown)
     document.addEventListener('keydown', handleKeyDown)
@@ -47,7 +54,7 @@ export function NoteComposer({ onCreate }: NoteComposerProps) {
       document.removeEventListener('mousedown', handlePointerDown)
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [expanded, collapseAndSave])
+  }, [expanded, handleSave, handleCancel])
 
   if (!expanded) {
     return (
@@ -81,14 +88,13 @@ export function NoteComposer({ onCreate }: NoteComposerProps) {
         autoFocusContent
         contentPlaceholder="Start writing your note..."
       />
-      <div className="mt-3 flex justify-end">
-        <button
-          type="button"
-          onClick={collapseAndSave}
-          className="rounded-md px-3 py-1.5 text-sm font-medium text-muted transition-colors hover:bg-surface-hover hover:text-text"
-        >
-          Close
-        </button>
+      <div className="mt-3 flex justify-end gap-2">
+        <Button type="button" variant="ghost" size="sm" onClick={handleCancel}>
+          Cancel
+        </Button>
+        <Button type="button" size="sm" onClick={handleSave} disabled={isEmpty}>
+          Save
+        </Button>
       </div>
     </div>
   )

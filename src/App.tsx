@@ -61,7 +61,7 @@ function App() {
 
   const handleCreate = (data: { title: string; content: string; image: string | null }) => {
     notesApi.createNote(data)
-    toast.success('Note created')
+    toast.success('Note created successfully')
   }
 
   const handleArchive = (id: string) => {
